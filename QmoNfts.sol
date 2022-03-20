@@ -50,6 +50,18 @@ contract QuimoNFTS is ERC721, ERC721URIStorage, Pausable, Ownable, ERC721Burnabl
         return super.tokenURI(tokenId);
     }
 
+    function payForMint (address to, string memory uri) public payable {
+        require(msg.value >= 100000000000000000, "Not enough ETH sent; check price!"); 
+        require (existingUris[uri] !=1);
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        existingUris[uri] = 1;
+
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
+
+    }
+
     function isContentOwned(string memory uri) public view returns (bool){
         return existingUris[uri] == 1;
 
@@ -60,4 +72,3 @@ contract QuimoNFTS is ERC721, ERC721URIStorage, Pausable, Ownable, ERC721Burnabl
 
     }
 }
-
